@@ -8,9 +8,15 @@ class VendorDetailsController < ApplicationController
     render json: {
       status: "success",
       #image_preview: @vendor_details.w9form.attached? ? rails_representation_url(@vendor_details.w9form) : nil
-      image_preview: @vendor_details.w9form.attached? ? rails_representation_url(@vendor_details.w9form.variant(resize: "200x200")) : nil,
-      image_preview2: @vendor_details.address_proof.attached? ? rails_representation_url(@vendor_detail.address_proof(resize: "200x200")) : "image not found",
-      image_preview3: @vendor_details.photo_id.attached? ?  rails_representation_url(@vendor_detail.photo_id(resize: "200x200")) : nil
+      #image_preview: @vendor_details.w9form.attached? ? rails_blob_url(@vendor_details.w9form) : nil
+          image_preview: @vendor_details.w9form.attached? ? 
+      (@vendor_details.w9form.image? ? 
+        rails_representation_url(@vendor_details.w9form.variant(resize: "200x200")) : 
+        rails_blob_url(@vendor_details.w9form)
+      ) : nil,
+
+      image_preview2: @vendor_details.address_proof.attached? ? rails_representation_url(@vendor_details.address_proof.variant(resize: "200x200")) : "image not found",
+      image_preview3: @vendor_details.photo_id.attached? ?  rails_representation_url(@vendor_details.photo_id.variant(resize: "200x200")) : nil
 
     }
     #render json: @vendor_details
