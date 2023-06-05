@@ -99,11 +99,16 @@ class VendorDetailsController < ApplicationController
   def destroy
     @vendor_detail.destroy
   end
-  # def latest
-  #   @vendor_detail = VendorDetail.last.to_json(include: [:w9form])
-  #   render json: @vendor_details
-
-  # end
+  def approve
+    @vendor_details = VendorDetail.find_by(email: params[:email])
+    if @vendor_details
+      @vendor_details.update(approved: true)
+      render json: { message: 'Vendor email approved successfully.' }
+    else
+      render json: { error: 'Invalid vendor email or unauthorized access.' }, status: :unprocessable_entity
+    end
+  end
+ 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_vendor_detail

@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   get 'pages/home'
   get 'pages/restricted'
   get 'latest', to: 'vendor_details#latest'
-
+  post '/approve', to: 'vendor_details#approve'
   namespace :api do
     namespace :v1 do
       resources :roles, only: [:index, :create, :update, :destroy]
