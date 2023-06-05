@@ -1,43 +1,89 @@
 class VendorDetailsController < ApplicationController
   before_action :set_vendor_detail, only: [:show, :update, :destroy]
-
+  
   # GET /vendor_details
   def index
-    @vendor_details = VendorDetail.last
-   
-    render json: {
+    @vendor_details = VendorDetail.all
+  
+    vendor_details_data = @vendor_details.map do |vendor_detail|
+      {
+        company_name: vendor_detail.company_name,
+        first_name: vendor_detail.first_name,
+        last_name: vendor_detail.last_name,
+        email: vendor_detail.email,
+        password: vendor_detail.password,
+        vendor_telephone: vendor_detail.telephone,
+        telephone: vendor_detail.address,
+        image_url: vendor_detail.w9form.attached? ? rails_blob_path(vendor_detail.w9form) : nil,
+        tnc: vendor_detail.tnc,
+        approved: vendor_detail.approved
+        
+      }
+    end
+  
+    render json: { 
       status: "success",
-      #image_preview: @vendor_details.w9form.attached? ? rails_representation_url(@vendor_details.w9form) : nil
-      #image_preview: @vendor_details.w9form.attached? ? rails_blob_url(@vendor_details.w9form) : nil
-          image_preview: @vendor_details.w9form.attached? ? 
-      (@vendor_details.w9form.image? ? 
-        rails_representation_url(@vendor_details.w9form.variant(resize: "200x200")) : 
-        rails_blob_url(@vendor_details.w9form)
-      ) : nil,
-
-      image_preview2: @vendor_details.address_proof.attached? ? rails_representation_url(@vendor_details.address_proof.variant(resize: "200x200")) : "image not found",
-      image_preview3: @vendor_details.photo_id.attached? ?  rails_representation_url(@vendor_details.photo_id.variant(resize: "200x200")) : nil
-
-    }
-    #render json: @vendor_details
+      data: vendor_details_data,
+      message: "Successfully fetched vendor details"
+    }, status: :ok
   end
-
+  
+  
   # GET /vendor_details/1
   def show
-    render json: @vendor_detail
+    #render json: @vendor_detail
+    render json: { 
+      status: "success",
+       
+     
+      
+      vendor_name: @vendor_detail.company_name,
+      vendor_firstname: @vendor_detail.first_name,
+      vendor_lastname: @vendor_detail.last_name,
+      vendor_email: @vendor_detail.email,
+      vendor_pasword: @vendor_detail.password,
+      vendor_telephone: @vendor_detail.telephone,
+      vendor_address: @vendor_detail.address,
+      image_url: @vendor_detail.w9form.attached? ? rails_blob_path(@vendor_detail.w9form) : nil,
+      vendor_tnc: @vendor_detail.tnc,
+      vendor_approved: @vendor_detail.approved,
+
+ 
+     
+      message: "Successfully created" 
+    }, status: :created, location: @vendor_detail
   end
 
-  # POST /vendor_details
+  
   def create
     @vendor_detail = VendorDetail.new(vendor_detail_params)
 
     if @vendor_detail.save
-      #render json: @vendor_detail, status: :created, location: @vendor_detail
-      render json: "sucessfully created",status: :created, location: @vendor_detail
+      render json: { 
+        status: "success",
+         
+       
+        
+        vendor_name: @vendor_detail.company_name,
+        vendor_firstname: @vendor_detail.first_name,
+        vendor_lastname: @vendor_detail.last_name,
+        vendor_email: @vendor_detail.email,
+        vendor_pasword: @vendor_detail.password,
+        vendor_telephone: @vendor_detail.telephone,
+        vendor_address: @vendor_detail.address,
+        image_url: @vendor_detail.w9form.attached? ? rails_blob_path(@vendor_detail.w9form) : nil,
+        vendor_tnc: @vendor_detail.tnc,
+        vendor_approved: @vendor_detail.approved,
+
+   
+       
+        message: "Successfully created" 
+      }, status: :created, location: @vendor_detail
     else
       render json: @vendor_detail.errors, status: :unprocessable_entity
     end
   end
+  
 
 
   # PATCH/PUT /vendor_details/1
@@ -62,10 +108,16 @@ class VendorDetailsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_vendor_detail
       @vendor_detail = VendorDetail.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: { status: "error", message: "Vendor not exist" }, status: :not_found
     end
+    # def set_vendor_detail
+    #   @vendor_detail = VendorDetail.find(params[:id])
+    # end
 
     # Only allow a list of trusted parameters through.
     def vendor_detail_params
-      params.require(:vendor_detail).permit(:company_name, :first_name, :last_name, :email, :address, :w9form, :address_proof, :photo_id, :tnc, :approved, :user_id)
+      params.require(:vendor_detail).permit(:company_name, :last_name, :first_name, :email, :password,:telephone, :address, :w9form,  :tnc, :approved, :user_id)
     end
+   
 end
