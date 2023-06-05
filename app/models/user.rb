@@ -6,7 +6,7 @@ class User < ApplicationRecord
   has_one :vendor_detail
 
   devise :database_authenticatable,
-         :recoverable, :rememberable, :validatable, :api
+         :recoverable, :rememberable, :confirmable, :validatable, :api
 
   def active_for_authentication?
     super && !(has_role?(:vendor) && !vendor_approved?)
