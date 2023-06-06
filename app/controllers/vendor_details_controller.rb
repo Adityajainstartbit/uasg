@@ -3,7 +3,9 @@ class VendorDetailsController < ApplicationController
   
   # GET /vendor_details
   def index
-    @vendor_details = VendorDetail.all
+    page = params[:page] || 1
+    per_page = params[:per_page] || 10
+    @vendor_details = VendorDetail.paginate(page: page, per_page: per_page)
   
     vendor_details_data = @vendor_details.map do |vendor_detail|
       {
@@ -14,19 +16,24 @@ class VendorDetailsController < ApplicationController
         password: vendor_detail.password,
         vendor_telephone: vendor_detail.telephone,
         telephone: vendor_detail.address,
-        image_url: vendor_detail.w9form.attached? ? rails_blob_path(vendor_detail.w9form) : nil,
+        image_url: vendor_detail.w9form.attached? ? url_for(vendor_detail.w9form) : nil,
         tnc: vendor_detail.tnc,
         approved: vendor_detail.approved
-        
       }
     end
   
     render json: { 
       status: "success",
-      data: vendor_details_data,
+      vendor_details: vendor_details_data,
+      pagination: {
+        current_page: @vendor_details.current_page,
+        total_pages: @vendor_details.total_pages,
+        count: @vendor_details.total_entries
+      },
       message: "Successfully fetched vendor details"
     }, status: :ok
   end
+  
   
   
   # GET /vendor_details/1

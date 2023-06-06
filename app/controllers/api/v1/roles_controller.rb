@@ -2,8 +2,22 @@ class Api::V1::RolesController < ApplicationController
   before_action :set_role, only: [:show, :update, :destroy]
 
   def index
-    roles = Role.all
-    render json: roles
+    #roles = Role.all
+    page = params[:page] || 1
+    per_page = params[:per_page] || 10
+    roles = Role.paginate(page: params[:page], per_page: params[:per_page])
+    render json: {
+      roles: roles,
+      status: "success",
+      #roles: roles,
+      pagination: {
+        current_page: roles.current_page,
+        total_pages: roles.total_pages,
+        count: roles.total_entries
+      },
+      message: "Successfully fetched roles details",
+    }, status: :ok
+    #render json: roles
   end
 
   def create
