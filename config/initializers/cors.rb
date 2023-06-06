@@ -5,13 +5,26 @@
 
 # Read more: https://github.com/cyu/rack-cors
 
+# Rails.application.config.middleware.insert_before 0, Rack::Cors do
+#   allow do
+#     origins 'http://192.168.1.168:3000',
+#           'https://ag-vendor.herokuapp.com/'
+    
+
+#     resource '*',
+#       headers: :any,
+#       methods: [:get, :post, :put, :patch, :delete, :options, :head]
+#   end
+# end
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins 'http://192.168.1.168:3000'
-    
+    resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head]
+  end
 
-    resource '*',
-      headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head]
+  allow do
+    origins 'https://ag-vendor.herokuapp.com'
+    resource '*', headers: :any, methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
 end
+

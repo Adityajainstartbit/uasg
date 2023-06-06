@@ -14,7 +14,7 @@ Rails.application.configure do
 
   # Show full error reports.
   config.consider_all_requests_local = true
-  config.action_mailer.default_url_options = { host: '192.168.1.22', port: 3000 }
+  config.action_mailer.default_url_options = { host: '192.168.1.22', port: 4000 }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true

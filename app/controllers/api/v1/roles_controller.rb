@@ -28,6 +28,9 @@ class Api::V1::RolesController < ApplicationController
       render json: { errors: role.errors.full_messages }, status: :unprocessable_entity
     end
   end
+  def show
+    render json: @role
+  end
 
   def update
     if @role.update(role_params)

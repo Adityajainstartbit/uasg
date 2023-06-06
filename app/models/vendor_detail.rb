@@ -17,8 +17,12 @@ class VendorDetail < ApplicationRecord
         errors.add(:w9form, "must be a valid image file (JPEG, PNG, GIF, SVG, JPG)")
       end
     end
+    
 
     after_create :create_corresponding_user
+    def self.get_vendor_detail
+      where(approved: nil)
+    end
     
   private
 
